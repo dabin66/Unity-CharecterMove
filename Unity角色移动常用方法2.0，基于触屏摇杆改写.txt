@@ -16,6 +16,13 @@ public class PlayerMove : MonoBehaviour {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 	
+        
+	//添加的代码
+        //按键的取值，以虚拟摇杆中的值为优先
+        if (Joystick.h != 0 || Joystick.v != 0)
+        {
+            h = Joystick.h;v = Joystick.v;
+        }
 
 
         //键盘的取值
