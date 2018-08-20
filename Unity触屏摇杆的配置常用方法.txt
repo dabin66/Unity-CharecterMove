@@ -1,0 +1,54 @@
+﻿ using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Joystick : MonoBehaviour {
+    private Transform button;
+    private bool isPress = false;
+    public static float h;
+    public static float v;
+    private void Awake()
+    {
+        button = transform.Find("Button");
+    }
+    //判断是否触屏
+    void OnPress(bool isPress)
+    {
+        this.isPress = isPress;
+
+        //当停止触碰时，一切归原位
+        if (isPress == false)
+        {
+            button.localPosition = Vector3.zero;
+            h = 0;
+            v = 0;
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (isPress)
+        {
+            //获取触屏时的坐标
+            Vector2 touchPos = UICamera.lastEventPosition;
+            //触屏时让按钮跟随鼠标触屏的实时坐标
+            touchPos -= new Vector2(91, 91);
+            //触屏实时坐标与按钮原点的位置
+            float distance = Vector2.Distance(Vector2.zero, touchPos);
+            //控制按钮不要移出摇杆背景外，摇杆背景的半径73
+            if (distance > 73)
+            {
+                //touchPos.normalized是单位长度，touchPos得到原点到摇杆背景半径末端的距离
+                touchPos = touchPos.normalized * 73;
+                button.localPosition = touchPos;
+            }
+            else
+            {
+                button.localPosition = touchPos;
+            }
+            //得到水平，垂直方向的值，范围为-1~1之间
+             h = touchPos.x / 73;
+             v = touchPos.y / 73;
+        }
+	}
+}
